@@ -4,21 +4,21 @@ import Image from "next/image";
 const Page = () => {
   return (
     <div className="flex h-screen bg-rgb-green">
-      <div className="flex items-center justify-center w-1/2">
-        <div className="mb-10 mx-auto my-auto">
-          <h1 className="flex justify-center text-3xl font-semibold text-white tracking-[0.2rem]">
+      <div className="flex w-1/2 items-center justify-center">
+        <div className="mx-auto my-auto mb-10">
+          <h1 className="flex justify-center text-3xl font-semibold tracking-[0.2rem] text-white">
             Welcome to AdiSoft
           </h1>
           <br />
-          <h3 className="flex justify-center text-lg leading-8 font-light text-white tracking-widest">
+          <h3 className="flex justify-center text-lg font-light leading-8 tracking-widest text-white">
             Thank you for choosing us!
           </h3>
           <SignInForm />
         </div>
       </div>
-      <div className="flex w-1/2 items-end bg-svg-background bg-cover bg-center relative">
+      <div className="relative flex w-1/2 items-end bg-svg-background bg-cover bg-center">
         <Image
-          className="absolute bottom-0 -left-10"
+          className="absolute -left-10 bottom-0"
           src="/joinUs.svg"
           alt="SignIn"
           width={700}

@@ -2,11 +2,11 @@ import Image from "next/image";
 
 const SignInForm = () => {
   return (
-    <form className="max-w-sm mt-10">
+    <form className="mt-10 max-w-sm">
       <div className="flex gap-5 text-white">
         <div className="border-b border-white py-3 ">
           <input
-            className="border-b bg-transparent border-none w-full font-light mr-3 py-2 focus:outline-none"
+            className="mr-3 w-full border-b border-none bg-transparent py-2 font-light focus:outline-none"
             type="text"
             placeholder="First Name"
           />
@@ -14,7 +14,7 @@ const SignInForm = () => {
 
         <div className="border-b border-white py-3">
           <input
-            className="bg-transparent border-none w-full font-light mr-3 py-2 focus:outline-none"
+            className="mr-3 w-full border-none bg-transparent py-2 font-light focus:outline-none"
             type="text"
             placeholder="Last Name"
           />
@@ -23,7 +23,7 @@ const SignInForm = () => {
 
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
-          className="bg-transparent border-none w-full font-light mr-3 py-2 focus:outline-none"
+          className="mr-3 w-full border-none bg-transparent py-2 font-light focus:outline-none"
           type="text"
           placeholder="Email"
         />
@@ -31,7 +31,7 @@ const SignInForm = () => {
 
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
-          className="bg-transparent border-none w-full font-light mr-3 py-2 focus:outline-none"
+          className="mr-3 w-full border-none bg-transparent py-2 font-light focus:outline-none"
           type="text"
           placeholder="Password"
         />
@@ -45,7 +45,7 @@ const SignInForm = () => {
 
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
-          className="bg-transparent border-none w-full font-light mr-3 py-2 focus:outline-none"
+          className="mr-3 w-full border-none bg-transparent py-2 font-light focus:outline-none"
           type="text"
           placeholder="Confirm Password"
         />
@@ -59,12 +59,12 @@ const SignInForm = () => {
 
       <div className="flex flex-col items-center justify-center py-10">
         <button
-          className="flex-shrink-0 bg-rgb-yellow hover:bg-rgb-green border-none text-sm border-4 text-rgb-green py-2.5 px-4 rounded"
+          className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-4 py-2.5 text-sm text-rgb-green hover:bg-rgb-green"
           type="button"
         >
           Sign Up
         </button>
-        <h3 className="text-white font-extralight pt-4">Or Sign Up with</h3>
+        <h3 className="pt-4 font-extralight text-white">Or Sign Up with</h3>
         <Image
           className="pt-4"
           src="/google.svg"
@@ -72,7 +72,7 @@ const SignInForm = () => {
           width={50}
           height={50}
         />
-        <h3 className="text-white font-extralight pt-4">
+        <h3 className="pt-4 font-extralight text-white">
           Already have an account?{" "}
           <span className="font-semibold">SIGN IN</span>
         </h3>
