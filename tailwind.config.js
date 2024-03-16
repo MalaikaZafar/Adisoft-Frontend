@@ -7,10 +7,17 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"],
+      },
       backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "svg-background": "url('/bg2.svg')",
+      },
+      colors: {
+        rgb: {
+          green: "rgb(1, 75, 91)",
+          yellow: "rgb(255, 169, 61)",
+        },
       },
     },
   },
