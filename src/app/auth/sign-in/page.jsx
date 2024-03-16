@@ -16,8 +16,14 @@ const Page = () => {
           <SignInForm />
         </div>
       </div>
-      <div className="flex w-1/2 items-end bg-svg-background bg-cover bg-center">
-        <Image src="/joinUs.svg" alt="SignIn" width={700} height={200} />
+      <div className="flex w-1/2 items-end bg-svg-background bg-cover bg-center relative">
+        <Image
+          className="absolute bottom-0 -left-10"
+          src="/joinUs.svg"
+          alt="SignIn"
+          width={700}
+          height={200}
+        />
       </div>
     </div>
   );
