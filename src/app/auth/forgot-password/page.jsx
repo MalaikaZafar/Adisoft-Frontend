@@ -1,11 +1,11 @@
-import SignInForm from "@/components/forms/SignInForm";
+import ForgotPasswordForm from "@/components/forms/ForgotPasswordForm";
 import Image from "next/image";
 
 const Page = () => {
   return (
     <div className="flex h-screen bg-rgb-green">
       <div className="flex w-1/2 items-center justify-center">
-        <div className="mx-auto my-auto mb-10">
+        <div>
           <Image
             className="mx-auto mb-5"
             src="/adisoft.svg"
@@ -14,21 +14,21 @@ const Page = () => {
             height={150}
           />
           <h1 className="flex justify-center text-3xl font-semibold tracking-[0.2rem] text-white">
-            Welcome Back Pal!
+            Forgot Your Password?
           </h1>
           <br />
           <h3 className="flex justify-center text-lg font-light leading-8 tracking-widest text-white">
-            Glad to have you back
+            We have your back!
           </h3>
-          <SignInForm />
+          <ForgotPasswordForm />
         </div>
       </div>
       <div className="relative flex w-1/2 items-end bg-svg-background bg-cover bg-center">
         <Image
           className="absolute -left-10 bottom-0"
-          src="/welcomeBack.svg"
-          alt="SignIn"
-          width={700}
+          src="/forgotPassword.svg"
+          alt="ForgotPassword"
+          width={500}
           height={200}
         />
       </div>
