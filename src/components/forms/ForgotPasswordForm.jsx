@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const ForgotPasswordForm = () => {
   return (
     <form className="mt-10 max-w-sm">
