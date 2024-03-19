@@ -5,9 +5,6 @@ import axios, { AxiosError } from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { BiLogoGoogle } from "react-icons/bi";
-import { BiSolidShow } from "react-icons/bi";
-import { BiSolidHide } from "react-icons/bi";
 import Image from "next/image";
 
 const SignUpForm = () => {
@@ -29,8 +26,8 @@ const SignUpForm = () => {
       const signupResponse = await axios.post(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/signup`,
         {
-          firstName: formData.get("First Name"),
-          lastName: formData.get("Last Name"),
+          firstname: formData.get("First Name"),
+          lastname: formData.get("Last Name"),
           email: formData.get("email"),
           password: formData.get("password"),
           confirmPassword: formData.get("ConfirmPassword"),
