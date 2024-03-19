@@ -6,7 +6,7 @@ const RecoverPasswordForm = () => {
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
           className="mr-3 w-full border-none bg-transparent py-2 font-light focus:outline-none"
-          type="text"
+          type="password"
           placeholder="Password"
         />
         <Image
@@ -20,7 +20,7 @@ const RecoverPasswordForm = () => {
       <div className="mt-5 flex items-center justify-evenly border-b border-white py-3">
         <input
           className="mr-3 w-full border-none bg-transparent py-2 font-light focus:outline-none"
-          type="text"
+          type="password"
           placeholder="Confirm Password"
         />
         <Image

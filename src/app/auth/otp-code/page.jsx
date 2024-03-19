@@ -3,9 +3,9 @@ import Image from "next/image";
 
 const Page = () => {
   return (
-    <div className="flex h-screen bg-rgb-green">
-      <div className="flex w-1/2 items-center justify-center">
-        <div>
+    <div className="flex h-screen flex-col bg-rgb-green md:flex-row">
+      <div className="flex w-full items-center justify-center sm:my-auto md:w-1/2">
+        <div className="text-center">
           <Image
             className="mx-auto mb-5"
             src="/adisoft.svg"
@@ -13,17 +13,17 @@ const Page = () => {
             width={150}
             height={150}
           />
-          <h1 className="flex justify-center text-3xl font-semibold tracking-[0.2rem] text-white">
+          <h1 className="text-3xl font-semibold tracking-wide text-white">
             Check Your Email
           </h1>
           <br />
-          <h3 className="flex justify-center text-lg font-light leading-8 tracking-widest text-white">
+          <h3 className="text-lg font-light leading-8 tracking-widest text-white">
             We just sent a recovery code
           </h3>
           <OtpCodeForm />
         </div>
       </div>
-      <div className="relative flex w-1/2 items-end bg-svg-background bg-cover bg-center">
+      <div className="relative flex w-1/2 items-end bg-svg-background bg-cover bg-center sm:hidden md:flex">
         <Image
           className="absolute -left-10 bottom-0"
           src="/otpCode.svg"
