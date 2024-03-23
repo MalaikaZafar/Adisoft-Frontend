@@ -43,7 +43,7 @@ const SignInForm = () => {
       {error && <div className="">{error}</div>}
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
-          className="w-full  border-none bg-transparent py-2 font-light focus:outline-none"
+          className="w-full border-none bg-transparent py-2 font-light focus:outline-none"
           type="text"
           placeholder="Email"
         />

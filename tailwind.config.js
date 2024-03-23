@@ -12,6 +12,8 @@ module.exports = {
       },
       backgroundImage: {
         "svg-background": "url('/bg2.svg')",
+        "svg-background1": "url('/bg1.svg')",
+
       },
       colors: {
         rgb: {
