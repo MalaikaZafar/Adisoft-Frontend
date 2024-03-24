@@ -4,7 +4,7 @@ const OtpCodeForm = () => {
       <div className="flex items-center justify-between py-3">
         <div className="flex items-center justify-center border-b border-white">
           <input
-            className="flex w-10 border-none bg-transparent py-2 font-light focus:outline-none"
+            className="flex w-10 border-none bg-transparent py-2 font-light text-black focus:outline-none"
             type="number"
             placeholder="0"
           />
@@ -12,7 +12,7 @@ const OtpCodeForm = () => {
 
         <div className="flex items-center justify-center border-b border-white">
           <input
-            className="flex w-10 border-none bg-transparent py-2 font-light focus:outline-none"
+            className="flex w-10 border-none bg-transparent py-2 font-light text-black focus:outline-none"
             type="number"
             placeholder="0"
           />
@@ -20,7 +20,7 @@ const OtpCodeForm = () => {
 
         <div className="flex items-center justify-center border-b border-white">
           <input
-            className="flex w-10 border-none bg-transparent py-2 font-light focus:outline-none"
+            className="flex w-10 border-none bg-transparent py-2 font-light text-black focus:outline-none"
             type="number"
             placeholder="0"
           />
@@ -28,7 +28,7 @@ const OtpCodeForm = () => {
 
         <div className="flex items-center justify-center border-b border-white">
           <input
-            className="flex w-10 border-none bg-transparent py-2 font-light focus:outline-none"
+            className="flex w-10 border-none bg-transparent py-2 font-light text-black focus:outline-none"
             type="number"
             placeholder="0"
           />
@@ -40,7 +40,7 @@ const OtpCodeForm = () => {
           Didn't get the code? <span className="font-semibold">Resend</span>
         </h3>
         <button
-          className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-4 py-2.5 text-sm text-rgb-green"
+          className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-14 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
           type="button"
         >
           Recover Account

@@ -3,7 +3,7 @@ const ForgotPasswordForm = () => {
     <form className="mt-10 max-w-sm">
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
-          className="mr-3 w-full border-none bg-transparent py-2 font-light focus:outline-none"
+          className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type="text"
           placeholder="Email"
         />
@@ -17,7 +17,7 @@ const ForgotPasswordForm = () => {
 
       <div className="flex flex-col items-center justify-center py-10">
         <button
-          className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-4 py-2.5 text-sm text-rgb-green"
+          className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-14 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
           type="button"
         >
           Send Recovery Link

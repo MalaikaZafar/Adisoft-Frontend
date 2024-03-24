@@ -43,7 +43,7 @@ const SignInForm = () => {
       {error && <div className="">{error}</div>}
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
-          className="w-full border-none bg-transparent py-2 font-light focus:outline-none"
+          className="w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type="text"
           placeholder="Email"
         />
@@ -51,7 +51,7 @@ const SignInForm = () => {
 
       <div className="mt-5 flex items-center justify-evenly border-b border-white py-3">
         <input
-          className="w-full border-none bg-transparent py-2 font-light focus:outline-none"
+          className="w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type={showPassword ? "text" : "password"}
           placeholder="Password"
         />
@@ -79,7 +79,7 @@ const SignInForm = () => {
 
       <div className="flex flex-col items-center justify-center py-10">
         <button
-          className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-4 py-2.5 text-sm text-rgb-green"
+          className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-14 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
           type="button"
           onClick={(e) => {
             e.preventDefault();
@@ -88,8 +88,8 @@ const SignInForm = () => {
         >
           Sign In
         </button>
-        <h3 className="pt-4 font-extralight text-white">Or Login with</h3>
-        <Image
+        <h3 className="pt-4 text-lg font-bold text-white">OR </h3>
+        {/* <Image
           onClick={(e) => {
             e.preventDefault();
             signIn("google");
@@ -99,10 +99,34 @@ const SignInForm = () => {
           alt="SignIn"
           width={50}
           height={50}
-        />
+        /> */}
+
+        <div className="mt-5 flex gap-5">
+          <Link href="/auth/investor-sign-up">
+            <button
+              className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-4 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
+              type="button"
+            >
+              Become an Investor
+            </button>
+          </Link>
+
+          <Link href="/auth/expert-sign-up">
+            <button
+              className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-4 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
+              type="button"
+            >
+              Become an Expert
+            </button>
+          </Link>
+        </div>
+
         <h3 className="pt-4 font-extralight text-white">
-          Already have an account?{" "}
-          <span className="font-semibold">SIGN IN</span>
+          Doesn't have an account?{" "}
+          <Link href="/auth/sign-up">
+            {" "}
+            <span className="font-semibold">SIGN UP</span>{" "}
+          </Link>
         </h3>
       </div>
     </form>
