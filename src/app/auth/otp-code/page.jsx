@@ -4,7 +4,7 @@ import Image from "next/image";
 const Page = () => {
   return (
     <div className="flex h-screen flex-col bg-rgb-green md:flex-row">
-      <div className="flex w-full items-center justify-center sm:my-auto md:w-1/2">
+      <div className="my-auto flex w-full items-center justify-center md:w-1/2">
         <div className="text-center">
           <Image
             className="mx-auto mb-5"
@@ -23,7 +23,7 @@ const Page = () => {
           <OtpCodeForm />
         </div>
       </div>
-      <div className="relative flex w-1/2 items-end bg-svg-background bg-cover bg-center sm:hidden md:flex">
+      <div className="relative hidden w-1/2 items-end bg-svg-background bg-cover bg-center md:flex">
         <Image
           className="absolute -left-10 bottom-0"
           src="/otpCode.svg"
