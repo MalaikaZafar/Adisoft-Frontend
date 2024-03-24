@@ -70,7 +70,7 @@ const NavSection = () => {
             {/*Button Div*/}
             <Link href="/auth/sign-in">
               <button
-                className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-4 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
+                className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-3 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
                 type="button"
               >
                 Get Started

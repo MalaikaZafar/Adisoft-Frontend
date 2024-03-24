@@ -132,24 +132,6 @@ const InvestorSignUpForm = () => {
         </div>
       </div>
 
-      <div className="flex gap-5">
-        <div className="border-b border-white py-3">
-          <input
-            className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
-            type="text"
-            placeholder="Company 3"
-          />
-        </div>
-
-        <div className="border-b border-white py-3">
-          <input
-            className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
-            type="text"
-            placeholder="Investings"
-          />
-        </div>
-      </div>
-
       <div className="flex flex-col items-center justify-center py-7">
         <button
           className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-14 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"

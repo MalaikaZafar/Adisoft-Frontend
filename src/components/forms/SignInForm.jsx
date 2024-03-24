@@ -73,7 +73,12 @@ const SignInForm = () => {
           <h3 className="font-extralight text-white">Remember Me</h3>
         </div>
         <div>
-          <h3 className="font-extralight text-white">Forgot Password?</h3>
+          <Link href="/auth/forgot-password">
+            {" "}
+            <h3 className="font-extralight text-white">
+              Forgot Password?
+            </h3>{" "}
+          </Link>
         </div>
       </div>
 
