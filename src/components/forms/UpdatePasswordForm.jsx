@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const RecoverPasswordForm = () => {
-  const [error, setError] = useState("");
+const UpdatePasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [cnfmPassword, setCnfmPassword] = useState("");
@@ -50,11 +50,31 @@ const RecoverPasswordForm = () => {
   };
   return (
     <form className="mt-10 max-w-sm">
+      {error && <div className="">{error}</div>}
       <div className="flex items-center justify-evenly border-b border-white py-3">
         <input
           className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type={showPassword ? "text" : "password"}
-          placeholder="Password"
+          placeholder="Current Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Image
+          onClick={(e) => {
+            e.preventDefault();
+            setShowPassword(!showPassword);
+          }}
+          src="/passwordHide.svg"
+          alt="Hide Password"
+          width={25}
+          height={20}
+        />
+      </div>
+
+      <div className="flex items-center justify-evenly border-b border-white py-3">
+        <input
+          className="mr-3 mt-5 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
+          type={showPassword ? "text" : "password"}
+          placeholder="New Password"
           onChange={(e) => setPassword(e.target.value)}
         />
         <Image
@@ -94,11 +114,11 @@ const RecoverPasswordForm = () => {
           type="button"
           onClick={handleSubmit}
         >
-          Reset Password
+          Update Password
         </button>
       </div>
     </form>
   );
 };
 
-export default RecoverPasswordForm;
+export default UpdatePasswordForm;

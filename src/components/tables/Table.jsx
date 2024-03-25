@@ -10,7 +10,7 @@ const Table = ({ data }) => {
               scope="col"
               className="px-6 py-3 text-sm font-medium uppercase tracking-wider text-gray-500"
             >
-              Name
+              Title
             </th>
             <th
               scope="col"

@@ -11,28 +11,25 @@ const SignInForm = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = {
       email: email,
-      password: password
-    }
-    console.log(formData);
+      password: password,
+    };
     try {
-      const res = await axiosInstance.post("/auth/login", formData)
-      if(res.status === 201){
-        sessionStorage.setItem("token", res.data.token)
-        router.push("/dashboard")
+      const res = await axiosInstance.post("/auth/login", formData);
+      if (res.status === 201) {
+        sessionStorage.setItem("token", res.data.token);
+        router.push("/dashboard");
       }
-
     } catch (err) {
       console.log("Failed to send Request" + err);
       console.log("Invalid Email or Password");
     }
-
   };
 
   return (
