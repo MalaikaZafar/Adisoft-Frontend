@@ -1,8 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
-import { signIn, useSession } from "next-auth/react";
+import axiosInstance from "@/app/api/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,40 +11,45 @@ const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [cnfmPassword, setCnfmPassword] = useState("");
 
-  useEffect(() => {
-    if (session) {
-      router.push("/");
-    }
-  }, [session, router]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const formData = new FormData(event.currentTarget);
-      const signupResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/signup`,
-        {
-          firstname: formData.get("First Name"),
-          lastname: formData.get("Last Name"),
-          email: formData.get("email"),
-          password: formData.get("password"),
-          confirmPassword: formData.get("ConfirmPassword"),
-        },
-      );
+    const pattern = new RegExp(/^[a-z0-9]+@[a-z]+\.[a-z]{2,4}$/)
+    const passPattern = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
 
-      const res = await signIn("credentials", {
-        email: signupResponse.data.email,
-        password: formData.get("password"),
-        redirect: false,
-      });
+    if(!pattern.test(email)){
+      //handle wrong email message
+    }
+    else if (!pattern.test(password)){
+      //handle wrong password message
+    }
+    else if (password !== cnfmPassword){
+      //handle password mismatch
+    }
+    else {
+      const formData = {
+        name: fname+" "+lname,
+        email: email,
+        password: password,
+        type: "user",
+        otp: "",
+        varified: false
+      }
 
-      if (res?.ok) return router.push("/");
-    } catch (error) {
-      console.log(error);
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data.message;
-        setError(errorMessage);
+      try{
+        const response = await axiosInstance.post(`/auth/signup`, userData)
+
+        console.log(response.data);
+        // require an account verification otp screen
+      }
+      catch(error){
+          console.error("Sign Up Failed: ", error.message);
       }
     }
   };
@@ -59,6 +63,7 @@ const SignUpForm = () => {
             className="mr-3 w-full border-b border-none bg-transparent py-2 font-light text-black focus:outline-none"
             type="text"
             placeholder="First Name"
+            onChange={(e)=> setFname(e.target.value)}
           />
         </div>
 
@@ -67,6 +72,7 @@ const SignUpForm = () => {
             className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
             type="text"
             placeholder="Last Name"
+            onChange={(e)=> setLname(e.target.value)}
           />
         </div>
       </div>
@@ -76,6 +82,7 @@ const SignUpForm = () => {
           className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type="text"
           placeholder="Email"
+          onChange={(e)=> setEmail(e.target.value)}
         />
       </div>
 
@@ -84,6 +91,7 @@ const SignUpForm = () => {
           className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type={showPassword ? "text" : "password"}
           placeholder="Password"
+          onChange={(e)=> setPassword(e.target.value)}
         />
         <Image
           onClick={(e) => {
@@ -102,6 +110,7 @@ const SignUpForm = () => {
           className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type={showPassword ? "text" : "password"}
           placeholder="Confirm Password"
+          onChange={(e)=> setCnfmPassword(e.target.value)}
         />
         <Image
           onClick={(e) => {
