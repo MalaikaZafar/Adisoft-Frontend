@@ -1,10 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import axiosInstance from "@/app/api/axios";
 
 import Image from "next/image";
 
@@ -12,30 +11,28 @@ const SignInForm = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    if (session && session.user) {
-      router.push("/");
-    }
-  }, [session, router]);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const res = await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      redirect: false,
-    });
+    const formData = {
+      email: email,
+      password: password
+    }
+    console.log(formData);
+    try {
+      const res = await axiosInstance.post("/auth/login", formData)
+      if(res.status === 201){
+        sessionStorage.setItem("token", res.data.token)
+        router.push("/dashboard")
+      }
 
-    if (res && res.error) {
-      setError(res.error);
+    } catch (err) {
+      console.log("Failed to send Request" + err);
+      console.log("Invalid Email or Password");
     }
 
-    if (!res || !res.error) {
-      router.push("/");
-    }
   };
 
   return (
@@ -46,6 +43,7 @@ const SignInForm = () => {
           className="w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type="text"
           placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
@@ -54,6 +52,7 @@ const SignInForm = () => {
           className="w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type={showPassword ? "text" : "password"}
           placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
         />
         <Image
           onClick={(e) => {
@@ -88,7 +87,7 @@ const SignInForm = () => {
           type="button"
           onClick={(e) => {
             e.preventDefault();
-            signIn();
+            handleSubmit(e);
           }}
         >
           Sign In

@@ -1,4 +1,27 @@
+'use client'
+
+import axiosInstance from "@/app/api/axios";
+import { useState } from "react";
+
 const ForgotPasswordForm = () => {
+
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = { 
+      email: email
+    }
+
+    try {
+      const res = await axiosInstance.post("/auth/request", formData)
+      console.log(res);
+    } catch (error) {
+      console.log("Incorrect Email"+error);
+    }
+
+  }
+
   return (
     <form className="mt-10 max-w-sm">
       <div className="flex items-center justify-evenly border-b border-white py-3">
@@ -6,6 +29,7 @@ const ForgotPasswordForm = () => {
           className="mr-3 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type="text"
           placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
@@ -19,6 +43,7 @@ const ForgotPasswordForm = () => {
         <button
           className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-14 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
           type="button"
+          onClick={(e)=>handleSubmit(e)}
         >
           Send Recovery Link
         </button>
