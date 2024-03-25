@@ -1,14 +1,19 @@
-'use client'
+"use client";
 
 import axiosInstance from "@/app/api/axios";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 const OtpCodeForm = () => {
+  const [email, setEmail] = useState("")
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem('email');
+    setEmail(storedEmail);
+  }, []);
+
   const router = useRouter();
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
   const [values, setValues] = useState(Array(6).fill(''));
-  const email = sessionStorage.getItem("email");
   const handleSubmit = async ()=> {
     var otpCode = ""
 
@@ -21,7 +26,9 @@ const OtpCodeForm = () => {
       otp: otpCode
     }
 
-    sessionStorage.setItem("otp", otpCode)
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem("otp", otpCode);
+    }
 
     try {
       const res = await axiosInstance.post("/auth/password-reset", formData)

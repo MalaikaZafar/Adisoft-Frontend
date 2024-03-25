@@ -10,7 +10,6 @@ const SignUpForm = () => {
   const [error, setError] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { data: session } = useSession();
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");

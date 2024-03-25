@@ -11,8 +11,15 @@ const RecoverPasswordForm = () => {
   const [password, setPassword] = useState("")
   const [cnfmPassword, setCnfmPassword] = useState("")
   const passPattern = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-  const email = sessionStorage.getItem("email")
-  const otp = sessionStorage.getItem("otp")
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem('email');
+    setEmail(storedEmail);
+    const storedOtp = sessionStorage.getItem("otp")
+    setOtp(storedOtp)
+  }, []);
 
   const handleSubmit = async () => {
     const formData = {
@@ -30,8 +37,10 @@ const RecoverPasswordForm = () => {
       try {
         const res = await axiosInstance.post('/auth/confirm', formData)
         if(res.data.message === "Password reset successful"){
-          sessionStorage.removeItem("email")
-          sessionStorage.removeItem("otp")
+          if (typeof window !== 'undefined') {
+            sessionStorage.removeItem("email")
+            sessionStorage.removeItem("otp")
+          }
           alert("Password Changed Successfully!")
           router.push('/auth/sign-in')
         }
