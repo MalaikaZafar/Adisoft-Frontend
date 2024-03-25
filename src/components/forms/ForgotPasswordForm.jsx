@@ -2,10 +2,12 @@
 
 import axiosInstance from "@/app/api/axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const ForgotPasswordForm = () => {
 
   const [email, setEmail] = useState("");
+  const router = useRouter()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +17,8 @@ const ForgotPasswordForm = () => {
 
     try {
       const res = await axiosInstance.post("/auth/request", formData)
-      console.log(res);
+      sessionStorage.setItem("email", email)
+      router.push('/auth/otp-code');
     } catch (error) {
       console.log("Incorrect Email"+error);
     }

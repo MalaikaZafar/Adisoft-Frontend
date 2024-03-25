@@ -11,12 +11,14 @@ const RecoverPasswordForm = () => {
   const [password, setPassword] = useState("")
   const [cnfmPassword, setCnfmPassword] = useState("")
   const passPattern = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-  
+  const email = sessionStorage.getItem("email")
+  const otp = sessionStorage.getItem("otp")
+
   const handleSubmit = async () => {
     const formData = {
-      email: "abdullahahmed693@gmail.com",
+      email: email,
       password: password,
-      otp:"526700"
+      otp: otp
     }
     if ( password !== cnfmPassword ){
       alert("Passowrds do not match!")
@@ -27,10 +29,11 @@ const RecoverPasswordForm = () => {
     else{
       try {
         const res = await axiosInstance.post('/auth/confirm', formData)
-        console.log(res);
         if(res.data.message === "Password reset successful"){
+          sessionStorage.removeItem("email")
+          sessionStorage.removeItem("otp")
           alert("Password Changed Successfully!")
-          //router.push('auth/sign-in')
+          router.push('/auth/sign-in')
         }
       } catch (error) {
         

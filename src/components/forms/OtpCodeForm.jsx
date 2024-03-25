@@ -4,34 +4,31 @@ import axiosInstance from "@/app/api/axios";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-const OtpCodeForm = ({ email }) => {
+const OtpCodeForm = () => {
   const router = useRouter();
-  const [otp, setOtp] = useState("")
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
   const [values, setValues] = useState(Array(6).fill(''));
-
+  const email = sessionStorage.getItem("email");
   const handleSubmit = async ()=> {
     var otpCode = ""
 
     for (let i = 0; i < values.length; i++){
       otpCode += values[i]
     }
-    console.log(otpCode);
-    setOtp(otpCode)
 
     const formData = {
-      email: "abdullahahmed693@gmail.com",
-      otp: otp
+      email: email,
+      otp: otpCode
     }
 
-    console.log(formData);
+    sessionStorage.setItem("otp", otpCode)
+
     try {
       const res = await axiosInstance.post("/auth/password-reset", formData)
-      console.log(res);
 
       if(res.status == 201){
         alert("Otp Verified")
-        router.push("/recover-password")
+        router.push('/auth/recover-password');
       }
     } catch (error) {
       console.log("Failed"+error);
