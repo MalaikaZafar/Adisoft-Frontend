@@ -2,7 +2,7 @@
 
 import axiosInstance from "@/app/api/axios";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const RecoverPasswordForm = () => {

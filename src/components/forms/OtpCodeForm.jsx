@@ -1,7 +1,7 @@
 "use client";
 
 import axiosInstance from "@/app/api/axios";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const OtpCodeForm = () => {
