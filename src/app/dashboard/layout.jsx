@@ -37,16 +37,16 @@ const DashboardLayout = ({ children }) => {
             {/*Links Div*/}
             <ul className="flex gap-10 font-light text-white">
               <li>
-                <Link
-                  href=""
-                  className="border-b py-2 font-semibold tracking-widest text-rgb-yellow"
-                >
+                <Link href="" className="tracking-wider hover:text-rgb-yellow">
                   Dashboard
                 </Link>
               </li>
 
               <li>
-                <Link href="" className="tracking-wider hover:text-rgb-yellow">
+                <Link
+                  href="/dashboard/subscription-plans"
+                  className="tracking-wider hover:text-rgb-yellow"
+                >
                   Pricing
                 </Link>
               </li>
