@@ -110,10 +110,10 @@ const DashboardLayout = ({ children }) => {
                   </div>
                   {/* Modal content */}
                   <div className="mb-4">
-                    <label className="font-semibold text-black">Name</label>
                     <input
-                      className="mb-3 mt-2 w-full rounded-md border border-black px-4 py-2"
+                      className="w-full border-b bg-transparent py-4 font-normal text-black focus:outline-none"
                       type="text"
+                      placeholder="Name"
                     />
                     <button className="mx-auto mt-3 flex rounded-3xl bg-rgb-yellow px-4 py-2 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400">
                       Update Name
