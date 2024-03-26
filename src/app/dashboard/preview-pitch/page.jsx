@@ -30,7 +30,7 @@ const page = () => {
           </label>
 
           <label className="w-full border-b bg-transparent py-4 font-normal text-gray-400 focus:outline-none">
-            Here Goes your Revenue Projections
+            Here Goes your Funding Requirements
           </label>
         </div>
 

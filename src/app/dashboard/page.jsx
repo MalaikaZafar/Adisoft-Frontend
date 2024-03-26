@@ -4,6 +4,13 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
+import Table from "@/components/tables/Table";
+
+const data = [
+  { id: 1, name: "Example 1", url: "https://example.com/1" },
+  { id: 2, name: "Example 2", url: "https://example.com/2" },
+  { id: 3, name: "Example 3", url: "https://example.com/3" },
+];
 
 const Page = () => {
   const [showModal, setShowModal] = useState(false);
@@ -237,7 +244,9 @@ const Page = () => {
             </div>
           </div>
           <div className="border-grey-50 border-b border-t"></div>
-          <div className="container mx-auto">{/* Table component */}</div>
+          <div className="container mx-auto">
+            <Table data={data} />
+          </div>
         </div>
       </div>
     </>
