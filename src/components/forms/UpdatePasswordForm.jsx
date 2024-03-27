@@ -10,25 +10,28 @@ const UpdatePasswordForm = () => {
   const [error, setError] = useState("");
   const router = useRouter();
   const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [cnfmPassword, setCnfmPassword] = useState("");
   const passPattern = new RegExp(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
   );
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [token, setToken] = useState("")
 
   useEffect(() => {
     const storedEmail = sessionStorage.getItem("email");
     setEmail(storedEmail);
     const storedOtp = sessionStorage.getItem("otp");
     setOtp(storedOtp);
+    const storedToken = sessionStorage.getItem("token")
+    setToken(storedToken)
   }, []);
 
   const handleSubmit = async () => {
     const formData = {
-      email: email,
-      password: password,
-      otp: otp,
+      currentpassword: password,
+      newpassword: newPassword,
     };
     if (password !== cnfmPassword) {
       alert("Passowrds do not match!");
@@ -36,8 +39,11 @@ const UpdatePasswordForm = () => {
       alert("Please enter a Strong Password");
     } else {
       try {
-        const res = await axiosInstance.post("/auth/confirm", formData);
-        if (res.data.message === "Password reset successful") {
+        const res = await axiosInstance.post("/auth/password-change", formData, {headers: {
+          'Authorization' : 'Bearer '+token
+        }});
+        console.log(res);
+        if (res.data === "Password Changed Successfully!") {
           if (typeof window !== "undefined") {
             sessionStorage.removeItem("email");
             sessionStorage.removeItem("otp");
@@ -75,7 +81,7 @@ const UpdatePasswordForm = () => {
           className="mr-3 mt-5 w-full border-none bg-transparent py-2 font-light text-black focus:outline-none"
           type={showPassword ? "text" : "password"}
           placeholder="New Password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setNewPassword(e.target.value)}
         />
         <Image
           onClick={(e) => {

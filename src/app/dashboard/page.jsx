@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
 import Table from "@/components/tables/Table";
+import axiosInstance from "../api/axios";
+import { useRouter } from "next/navigation";
 
 const data = [
   { id: 1, name: "Example 1", url: "https://example.com/1" },
@@ -18,6 +20,14 @@ const Page = () => {
   const [file, setFile] = useState("");
   const [files, setFiles] = useState("");
   const [lastUpload, setLastUpload] = useState(Date.now());
+  const [token, setToken] = useState("")
+
+  const router = useRouter()
+
+  useEffect(()=> {
+    const storedToken = sessionStorage.getItem('token');
+    setToken(storedToken);
+  })
 
   useEffect(() => {
     fetch("http://localhost:8080/pitch/files")
@@ -51,6 +61,31 @@ const Page = () => {
     //   alert("Uploaded Successfully!!!");
     // }
   };
+
+  const navigateToPitchCreation = async () => {
+    console.log(token);
+    if (token !== ""){
+      const res = await axiosInstance.post("/user/email", {} , {headers: {
+        'Authorization': 'Bearer '+token,
+      }})
+      console.log(res.data);
+      if(res){
+        const response = await axios.post(
+          "http://localhost:8080/user/validate",
+          {
+            email: res.data,
+          },
+        );
+        console.log(response);
+        if (response.data){
+          router.push('/dashboard/create-download-pitch')
+        }
+      }
+      else {
+        alert("Session Expired!")
+      }
+    }
+  }
 
   return (
     <>
@@ -172,6 +207,7 @@ const Page = () => {
             <button
               className="mt-3 flex-shrink-0 rounded-xl border-none bg-transparent px-16 py-3 font-semibold text-rgb-green shadow-md transition duration-300 ease-in-out hover:bg-slate-200"
               type="button"
+              onClick={() => {navigateToPitchCreation()}}
             >
               Create Pitch
             </button>

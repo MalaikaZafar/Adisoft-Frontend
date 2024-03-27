@@ -11,6 +11,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import axiosInstance from "@/app/api/axios";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -31,75 +32,89 @@ const CARD_ELEMENT_OPTIONS = {
 };
 
 const PaymentComponent = () => {
-  const [selected, setSelection] = useState(0);
+  const [selected, setSelection] = useState(20);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState("");
 
   const stripe = useStripe();
   const elements = useElements();
 
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    const storedToken = sessionStorage.getItem('token');
+    setToken(storedToken);
+  }, []);
+
   useEffect(() => {
     if (selected === 0) return;
-    if (paymentStatus !== "succeeded") return;
+    if (paymentStatus !== 'succeeded') return;
   }, [selected, paymentStatus]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (selected === 0) return;
     if (!stripe || !elements) return;
 
-    const cardEl = elements.getElement(CardElement);
+    const cardEl = elements.getElement(CardNumberElement);
+    console.log(cardEl);
 
     setIsProcessing(true);
 
     try {
-      const res = await axios.post("http://localhost:8080/stripe", {
-        email: "kek@gmail.com",
-        price: selected,
+      const res = await axiosInstance.post('/stripe', {
+        price: selected
       });
 
       console.log(res);
+      
 
-      const { client_secret: clientSecret } = res.data;
+      const { client_secret } = res.data;
 
-      const { paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      const { paymentIntent } = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: cardEl,
         },
       });
 
       console.log(paymentIntent);
-
+      
       if (!paymentIntent) {
-        setPaymentStatus("Payment failed!");
-      } else {
+        setPaymentStatus('Payment failed!');
+      } else {          
         setPaymentStatus(paymentIntent.status);
         subscriber();
       }
     } catch (error) {
       console.error(error);
-      setPaymentStatus("Payment failed mis!");
+      setPaymentStatus('Payment failed mis!');
     }
 
     setIsProcessing(false);
   };
 
   const subscriber = async () => {
+
     const startedon = new Date();
     const endson = new Date(startedon);
     endson.setDate(endson.getDate() + 30);
-    //let token = sessionStorage.getItem('token');
-    const response = await axios.post(
-      "http://localhost:8080/user/subscription",
-      {
-        email: "kek@gmail.com",
-        startedon,
-        endson,
-        active: true,
-      },
-    );
-    console.log(response);
+    console.log(token);
+    const res = await axiosInstance.post("/user/email", {} , {headers: {
+      'Authorization': 'Bearer '+token,
+    }})
+    console.log(res.data);
+    if (res) {
+      const response = await axiosInstance.post(
+        "/user/subscription",
+        {
+          email: res.data,
+          startedon: startedon,
+          endson: endson,
+          active: true,
+        },
+      );
+      console.log(response);
+    }
   };
 
   return (
@@ -153,13 +168,13 @@ const PaymentComponent = () => {
       </div>
 
       {/* <div className="flex items-center justify-between"> */}
-      <button
+      {!isProcessing && (<button
         className="focus:shadow-outline mx-auto flex justify-center rounded-3xl bg-rgb-yellow px-14 py-3 font-bold text-rgb-green hover:bg-green-700 hover:text-white focus:outline-none"
         type="submit"
         disabled={isProcessing}
       >
         {isProcessing ? "Processing..." : "Pay"}
-      </button>
+      </button>)}
       {/* </div> */}
       {isProcessing && <div>Processing...</div>}
       {!isProcessing && paymentStatus && <div>Status: {paymentStatus}</div>}

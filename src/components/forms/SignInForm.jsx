@@ -23,7 +23,7 @@ const SignInForm = () => {
     try {
       const res = await axiosInstance.post("/auth/login", formData);
       if (res.status === 201) {
-        sessionStorage.setItem("token", res.data.token);
+        await sessionStorage.setItem("token", res.data.token);
         router.push("/dashboard");
       }
     } catch (err) {
