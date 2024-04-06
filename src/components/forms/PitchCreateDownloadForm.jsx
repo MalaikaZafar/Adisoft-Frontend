@@ -2,9 +2,9 @@
 
 import React from "react";
 import { use, useState } from "react";
-// import saveFile from './saveFile'
 import axios from "axios";
-// import { saveAs } from "file-saver";
+import { saveAs } from "file-saver";
+import { useRouter } from "next/navigation";
 
 const PitchCreateDownloadForm = () => {
   const [targetAudience, settargetAudience] = useState("");
@@ -14,30 +14,34 @@ const PitchCreateDownloadForm = () => {
   const [fundingRequirements, setFundingRequirements] = useState("");
   const [totalMembers, setTotalMembers] = useState("");
   const [companyGoal, setCompanyGoal] = useState("");
+  const router = useRouter()
 
-  const createAndDownloadPdf = () => {
+  const createAndDownloadPdf = async () => {
     const state = {
       targetAudience: targetAudience,
       marketSizeEstimates: marketSizeEstimates,
       productDescription: productDescription,
       revenueProjections: revenueProjections,
-      financialData: financialData,
       fundingRequirements: fundingRequirements,
       totalMembers: totalMembers,
       companyGoal: companyGoal,
     };
 
-    axios
+    const res = await axios
       .post("http://127.0.0.1:5000/generate_pdf", state)
       .then(() =>
         axios.get("http://127.0.0.1:5000/fetch-pdf", { responseType: "blob" }),
       )
-      .then((res) => {
+      .then(async (res) => {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
 
-        saveAs(pdfBlob, "newPdf.pdf");
-      });
-  };
+        saveAs(pdfBlob, "pitch.pdf");
+      })
+      .finally(()=> {
+        alert("PDF Downloaded Successfully!")
+        router.push("/dashboard")
+      })
+    };
   return (
     <div className="flex justify-center bg-gray-100 ">
       <div className=" mt-10 flex w-4/5 flex-col rounded-lg bg-white p-8 shadow-md">

@@ -1,4 +1,4 @@
-import OtpCodeForm from "@/components/forms/OtpCodeForm";
+import SignUpOtpForm from "@/components/forms/SignUpOtpForm";
 import Image from "next/image";
 
 const Page = () => {
@@ -18,9 +18,9 @@ const Page = () => {
           </h1>
           <br />
           <h3 className="text-lg font-light leading-8 tracking-widest text-white">
-            We just sent a Verification Code
+            We just sent a verification code
           </h3>
-          <OtpCodeForm />
+          <SignUpOtpForm />
         </div>
       </div>
       <div className="relative hidden w-1/2 items-end bg-svg-background bg-cover bg-center md:flex">

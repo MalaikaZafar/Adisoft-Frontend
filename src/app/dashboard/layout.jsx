@@ -5,13 +5,19 @@ import Link from "next/link";
 
 import React from "react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter()
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
+
+  const signout = () => {
+    sessionStorage.removeItem("token");
+    router.push("/");
+  }
 
   return (
     <section>
@@ -37,7 +43,7 @@ const DashboardLayout = ({ children }) => {
             {/*Links Div*/}
             <ul className="flex gap-10 font-light text-white">
               <li>
-                <Link href="" className="tracking-wider hover:text-rgb-yellow">
+                <Link href="/dashboard" className="tracking-wider hover:text-rgb-yellow">
                   Dashboard
                 </Link>
               </li>
@@ -53,7 +59,7 @@ const DashboardLayout = ({ children }) => {
 
               <li>
                 <Link href="" className="tracking-wider hover:text-rgb-yellow">
-                  Learn
+                  Help
                 </Link>
               </li>
             </ul>
@@ -137,7 +143,7 @@ const DashboardLayout = ({ children }) => {
                   <div className="flex justify-end">
                     <button
                       className="rounded-3xl bg-red-600 px-4 py-2 text-sm text-white"
-                      onClick={toggleModal}
+                      onClick={signout}
                     >
                       Logout
                     </button>

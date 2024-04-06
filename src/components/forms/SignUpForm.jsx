@@ -19,36 +19,38 @@ const SignUpForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const pattern = new RegExp(/^[a-z0-9]+@[a-z]+\.[a-z]{2,4}$/)
-    const passPattern = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+    const pattern = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+    const passPattern = new RegExp(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
 
     if(!pattern.test(email)){
-      //handle wrong email message
+      alert("Invalid Email Format")
     }
-    else if (!pattern.test(password)){
-      //handle wrong password message
+    else if (!passPattern.test(password)){
+      alert("Invalid Password! Choose a password that has a Digit, Special Character, and Upper/Lower case letters")
     }
     else if (password !== cnfmPassword){
-      //handle password mismatch
+      alert("Password Mismatch")
     }
     else {
-      const formData = {
-        name: fname+" "+lname,
-        email: email,
-        password: password,
-        type: "user",
-        otp: "",
-        varified: false
-      }
-
+      let fullname = fname+" "+lname
       try{
-        const response = await axiosInstance.post(`/auth/signup`, userData)
+        const userData = {
+          name: fullname,
+          email: email,
+          password: password,
+          type:"user",
+          pitchCount: 0,
+          otp: "",
+          verified:false
+      }
+        const response = await axiosInstance.post("/auth/signup", userData)
 
         console.log(response.data);
-        // require an account verification otp screen
+        sessionStorage.setItem('email', email)
+        router.push("/auth/otp-code-signup")
       }
       catch(error){
-          console.error("Sign Up Failed: ", error.message);
+          console.error("Sign Up Failed: ", error.response.data);
       }
     }
   };
@@ -127,7 +129,7 @@ const SignUpForm = () => {
         <button
           className="flex-shrink-0 rounded border-4 border-none bg-rgb-yellow px-14 py-2.5 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400"
           type="button"
-          onClick={() => signUp()}
+          onClick={(e) => handleSubmit(e)}
         >
           Sign Up
         </button>

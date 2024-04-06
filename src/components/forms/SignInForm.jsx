@@ -23,11 +23,12 @@ const SignInForm = () => {
     try {
       const res = await axiosInstance.post("/auth/login", formData);
       if (res.status === 201) {
-        await sessionStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("email", email)
         router.push("/dashboard");
       }
     } catch (err) {
-      console.log("Failed to send Request" + err);
+      alert("Invalid Email or Password!")
       console.log("Invalid Email or Password");
     }
   };

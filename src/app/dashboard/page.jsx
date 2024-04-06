@@ -8,7 +8,7 @@ import Table from "@/components/tables/Table";
 import axiosInstance from "../api/axios";
 import { useRouter } from "next/navigation";
 
-const data = [
+var data = [
   { id: 1, name: "Example 1", url: "https://example.com/1" },
   { id: 2, name: "Example 2", url: "https://example.com/2" },
   { id: 3, name: "Example 3", url: "https://example.com/3" },
@@ -21,12 +21,16 @@ const Page = () => {
   const [files, setFiles] = useState("");
   const [lastUpload, setLastUpload] = useState(Date.now());
   const [token, setToken] = useState("")
+  const [email, setEmail] = useState("");
 
   const router = useRouter()
 
   useEffect(()=> {
     const storedToken = sessionStorage.getItem('token');
     setToken(storedToken);
+    const storedEmail = sessionStorage.getItem('email')
+    setEmail(storedEmail)
+    getPitches()
   })
 
   useEffect(() => {
@@ -36,30 +40,50 @@ const Page = () => {
       .catch((error) => console.error("Error fetching files:", error));
   }, [lastUpload]);
 
-  const openPdf = (filename) => {
-    const url = `http://localhost:8080/pitch/pdf/${filename}`;
-    window.open(url, "_blank");
-  };
+  const getPitches = async () => {
+  
+    const res = await axiosInstance.post('user/email', {}, {headers: {
+      'Authorization': "Bearer "+ token
+    }})
+    console.log(res);
+    if (res.status === 201){
+      const emailData = {
+        email: res.data
+      }
+      const resp = await axiosInstance.post('pitch/user/files', emailData)
+      console.log(resp);
+      data = resp.data
+    }
+    
+    
+  }
 
   const submitImage = async (e) => {
     e.preventDefault();
+
+    const res = await axiosInstance.post("/user/email", {} , {headers: {
+      'Authorization': 'Bearer '+token,
+    }})
+    console.log(res.data);
+    
     const formData = new FormData();
     formData.append("title", title);
+    formData.append("email", res.data)
     formData.append("file", file);
     console.log(title, file);
 
-    // const result = await axios.post(
-    //   "http://localhost:8080/pitch/upload",
-    //   formData,
-    //   {
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   }
-    // );
-    // setLastUpload(Date.now());
-    // console.log(result);
-    // if (result.data.status == "ok") {
-    //   alert("Uploaded Successfully!!!");
-    // }
+    const result = await axios.post(
+       "http://localhost:8080/pitch/upload",
+       formData,
+       {
+         headers: { "Content-Type": "multipart/form-data" },
+       }
+     );
+     setLastUpload(Date.now());
+     console.log(result);
+     if (result.data.title === title) {
+       alert("Uploaded Successfully!!!");
+     }
   };
 
   const navigateToPitchCreation = async () => {
@@ -79,6 +103,37 @@ const Page = () => {
         console.log(response);
         if (response.data){
           router.push('/dashboard/create-download-pitch')
+        }
+        else{
+          alert("You need to subscribe to access this feature!")
+        }
+      }
+      else {
+        alert("Session Expired!")
+      }
+    }
+  }
+
+  const navigateToIdeaInsight = async () => {
+    console.log(token);
+    if (token !== ""){
+      const res = await axiosInstance.post("/user/email", {} , {headers: {
+        'Authorization': 'Bearer '+token,
+      }})
+      console.log(res.data);
+      if(res){
+        const response = await axios.post(
+          "http://localhost:8080/user/validate",
+          {
+            email: res.data,
+          },
+        );
+        console.log(response);
+        if (response.data){
+          router.push('/dashboard/idea-insight')
+        }
+        else{
+          alert("You need to subscribe to access this feature!")
         }
       }
       else {
@@ -198,6 +253,7 @@ const Page = () => {
             <button
               className="mb-3flex-shrink-0 rounded-xl border-none bg-transparent px-14 py-3 font-semibold text-rgb-green shadow-md transition duration-300 ease-in-out hover:bg-slate-200"
               type="button"
+              onClick={()=>{navigateToIdeaInsight()}}
             >
               Validate Idea
             </button>
@@ -213,10 +269,11 @@ const Page = () => {
             </button>
           </Link>
 
-          <Link href="">
+          <Link href="/dashboard/success-prediction">
             <button
-              className="mt-3 flex-shrink-0 rounded-xl border-none bg-transparent px-16 py-3 font-semibold text-rgb-green shadow-md transition duration-300 ease-in-out hover:bg-slate-200"
+              className="mt-3 flex-shrink-0 rounded-xl border-none bg-transparent px-12 py-3 font-semibold text-rgb-green shadow-md transition duration-300 ease-in-out hover:bg-slate-200"
               type="button"
+              
             >
               Predict Success
             </button>
@@ -265,12 +322,6 @@ const Page = () => {
               Active Pitches
             </h1>
             <div className="flex justify-center gap-3 lg:gap-7">
-              <button
-                className="flex-shrink-0 rounded-3xl border-4 border-none bg-rgb-yellow px-6 py-2 text-sm font-light text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400 lg:px-5"
-                type="button"
-              >
-                Edit Pitch
-              </button>
               <button
                 className="flex-shrink-0 rounded-3xl border-4 border-none bg-rgb-green px-6 py-2 text-sm font-light text-white transition duration-300 ease-in-out hover:bg-red-800 lg:px-5"
                 type="button"
