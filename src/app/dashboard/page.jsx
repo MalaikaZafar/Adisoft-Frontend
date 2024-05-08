@@ -20,18 +20,18 @@ const Page = () => {
   const [file, setFile] = useState("");
   const [files, setFiles] = useState("");
   const [lastUpload, setLastUpload] = useState(Date.now());
-  const [token, setToken] = useState("")
+  const [token, setToken] = useState("");
   const [email, setEmail] = useState("");
 
-  const router = useRouter()
+  const router = useRouter();
 
-  useEffect(()=> {
-    const storedToken = sessionStorage.getItem('token');
+  useEffect(() => {
+    const storedToken = sessionStorage.getItem("token");
     setToken(storedToken);
-    const storedEmail = sessionStorage.getItem('email')
-    setEmail(storedEmail)
-    getPitches()
-  })
+    const storedEmail = sessionStorage.getItem("email");
+    setEmail(storedEmail);
+    getPitches();
+  });
 
   useEffect(() => {
     fetch("http://localhost:8080/pitch/files")
@@ -41,59 +41,74 @@ const Page = () => {
   }, [lastUpload]);
 
   const getPitches = async () => {
-  
-    const res = await axiosInstance.post('user/email', {}, {headers: {
-      'Authorization': "Bearer "+ token
-    }})
+    const res = await axiosInstance.post(
+      "user/email",
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      },
+    );
     console.log(res);
-    if (res.status === 201){
+    if (res.status === 201) {
       const emailData = {
-        email: res.data
-      }
-      const resp = await axiosInstance.post('pitch/user/files', emailData)
+        email: res.data,
+      };
+      const resp = await axiosInstance.post("pitch/user/files", emailData);
       console.log(resp);
-      data = resp.data
+      data = resp.data;
     }
-    
-    
-  }
+  };
 
   const submitImage = async (e) => {
     e.preventDefault();
 
-    const res = await axiosInstance.post("/user/email", {} , {headers: {
-      'Authorization': 'Bearer '+token,
-    }})
+    const res = await axiosInstance.post(
+      "/user/email",
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      },
+    );
     console.log(res.data);
-    
+
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("email", res.data)
+    formData.append("email", res.data);
     formData.append("file", file);
     console.log(title, file);
 
     const result = await axios.post(
-       "http://localhost:8080/pitch/upload",
-       formData,
-       {
-         headers: { "Content-Type": "multipart/form-data" },
-       }
-     );
-     setLastUpload(Date.now());
-     console.log(result);
-     if (result.data.title === title) {
-       alert("Uploaded Successfully!!!");
-     }
+      "http://localhost:8080/pitch/upload",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
+    setLastUpload(Date.now());
+    console.log(result);
+    if (result.data.title === title) {
+      alert("Uploaded Successfully!!!");
+    }
   };
 
   const navigateToPitchCreation = async () => {
     console.log(token);
-    if (token !== ""){
-      const res = await axiosInstance.post("/user/email", {} , {headers: {
-        'Authorization': 'Bearer '+token,
-      }})
+    if (token !== "") {
+      const res = await axiosInstance.post(
+        "/user/email",
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        },
+      );
       console.log(res.data);
-      if(res){
+      if (res) {
         const response = await axios.post(
           "http://localhost:8080/user/validate",
           {
@@ -101,27 +116,31 @@ const Page = () => {
           },
         );
         console.log(response);
-        if (response.data){
-          router.push('/dashboard/create-download-pitch')
+        if (response.data) {
+          router.push("/dashboard/create-download-pitch");
+        } else {
+          alert("You need to subscribe to access this feature!");
         }
-        else{
-          alert("You need to subscribe to access this feature!")
-        }
-      }
-      else {
-        alert("Session Expired!")
+      } else {
+        alert("Session Expired!");
       }
     }
-  }
+  };
 
   const navigateToIdeaInsight = async () => {
     console.log(token);
-    if (token !== ""){
-      const res = await axiosInstance.post("/user/email", {} , {headers: {
-        'Authorization': 'Bearer '+token,
-      }})
+    if (token !== "") {
+      const res = await axiosInstance.post(
+        "/user/email",
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        },
+      );
       console.log(res.data);
-      if(res){
+      if (res) {
         const response = await axios.post(
           "http://localhost:8080/user/validate",
           {
@@ -129,18 +148,16 @@ const Page = () => {
           },
         );
         console.log(response);
-        if (response.data){
-          router.push('/dashboard/idea-insight')
+        if (response.data) {
+          router.push("/dashboard/idea-insight");
+        } else {
+          alert("You need to subscribe to access this feature!");
         }
-        else{
-          alert("You need to subscribe to access this feature!")
-        }
-      }
-      else {
-        alert("Session Expired!")
+      } else {
+        alert("Session Expired!");
       }
     }
-  }
+  };
 
   return (
     <>
@@ -253,7 +270,9 @@ const Page = () => {
             <button
               className="mb-3flex-shrink-0 rounded-xl border-none bg-transparent px-14 py-3 font-semibold text-rgb-green shadow-md transition duration-300 ease-in-out hover:bg-slate-200"
               type="button"
-              onClick={()=>{navigateToIdeaInsight()}}
+              onClick={() => {
+                navigateToIdeaInsight();
+              }}
             >
               Validate Idea
             </button>
@@ -263,7 +282,9 @@ const Page = () => {
             <button
               className="mt-3 flex-shrink-0 rounded-xl border-none bg-transparent px-16 py-3 font-semibold text-rgb-green shadow-md transition duration-300 ease-in-out hover:bg-slate-200"
               type="button"
-              onClick={() => {navigateToPitchCreation()}}
+              onClick={() => {
+                navigateToPitchCreation();
+              }}
             >
               Create Pitch
             </button>
@@ -273,7 +294,6 @@ const Page = () => {
             <button
               className="mt-3 flex-shrink-0 rounded-xl border-none bg-transparent px-12 py-3 font-semibold text-rgb-green shadow-md transition duration-300 ease-in-out hover:bg-slate-200"
               type="button"
-              
             >
               Predict Success
             </button>
