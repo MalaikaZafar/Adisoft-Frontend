@@ -1,28 +1,13 @@
-import React, { useState } from "react";
 import Link from "next/link";
+import React, { useState } from "react";
 
-const ExpertTable = ({ data }) => {
-  const [showReviewPopup, setShowReviewPopup] = useState(false);
-  const [showNDAPopup, setShowNDAPopup] = useState(false);
+const InvestorTable = ({ data }) => {
+  const [showPopup, setShowPopup] = useState(false);
   const [selectedPitch, setSelectedPitch] = useState(null);
-  const [reviewText, setReviewText] = useState("");
 
-  const togglePopup = (pitch, isReview) => {
-    if (isReview) {
-      setSelectedPitch(pitch);
-      setShowReviewPopup(!showReviewPopup);
-    } else {
-      setShowNDAPopup(!showNDAPopup);
-    }
-  };
-
-  const handleReviewSubmit = () => {
-    // Logic to submit review
-    console.log("Review submitted:", reviewText);
-    // Clear review text
-    setReviewText("");
-    // Close popup
-    setShowReviewPopup(false);
+  const togglePopup = (pitch) => {
+    setSelectedPitch(pitch);
+    setShowPopup(!showPopup);
   };
 
   return (
@@ -52,7 +37,7 @@ const ExpertTable = ({ data }) => {
               scope="col"
               className="px-6 py-3 text-sm font-medium uppercase tracking-wider text-gray-500"
             >
-              Review
+              View
             </th>
           </tr>
         </thead>
@@ -71,7 +56,8 @@ const ExpertTable = ({ data }) => {
               </td>
               <td className="whitespace-nowrap text-center">
                 <a
-                  onClick={() => togglePopup(item.title, false)}
+                  // onClick={() => openPdf(item.pdf)}
+                  onClick={() => togglePopup(item.title)}
                   className="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-900"
                 >
                   {item.pdf}
@@ -80,9 +66,9 @@ const ExpertTable = ({ data }) => {
               <td className="whitespace-nowrap text-center">
                 <button
                   className="mb-3 mt-4 rounded-3xl bg-rgb-green px-3 py-2 text-sm text-white"
-                  onClick={() => togglePopup(item.title, true)}
+                  onClick={() => togglePopup(item.title)}
                 >
-                  Add Review
+                  View Pitch
                 </button>
               </td>
             </tr>
@@ -90,36 +76,7 @@ const ExpertTable = ({ data }) => {
         </tbody>
       </table>
 
-      {showReviewPopup && (
-        <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
-          <div className="w-2/4 rounded-lg bg-white p-10">
-            <h2 className="mb-4 text-lg font-bold">Add Review</h2>
-            <h2 className="mb-4 mt-2 text-lg font-bold">{selectedPitch}</h2>
-            <textarea
-              className="mb-4 h-32 w-full resize-none rounded-md border border-gray-300 p-2"
-              placeholder="Write your review..."
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end">
-              <button
-                className="mr-2 rounded-lg bg-rgb-yellow px-4 py-2 text-white"
-                onClick={() => setShowReviewPopup(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="rounded-lg bg-rgb-green px-4 py-2 text-white"
-                onClick={handleReviewSubmit}
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showNDAPopup && (
+      {showPopup && (
         <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
           <div className="w-2/4 rounded-lg bg-white p-6">
             <h2 className="mb-4 text-lg font-bold">Non-Disclosure Agreement</h2>
@@ -131,14 +88,14 @@ const ExpertTable = ({ data }) => {
             <div className="flex justify-end">
               <button
                 className="mr-2 rounded-lg bg-rgb-yellow px-4 py-2 text-gray-800"
-                onClick={() => setShowNDAPopup(false)}
+                onClick={togglePopup}
               >
                 Go back
               </button>
               <Link href="/investor-dashboard/agreement">
                 <button
                   className="rounded-lg bg-rgb-green px-4 py-2 text-white"
-                  onClick={() => setShowNDAPopup(false)}
+                  onClick={togglePopup}
                 >
                   Sign Non-Disclosure Agreement
                 </button>
@@ -150,5 +107,4 @@ const ExpertTable = ({ data }) => {
     </div>
   );
 };
-
-export default ExpertTable;
+export default InvestorTable;

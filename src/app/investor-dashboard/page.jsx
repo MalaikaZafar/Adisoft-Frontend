@@ -1,5 +1,5 @@
 "use client";
-import ExpertTable from "@/components/tables/ExpertTable";
+import InvestorTable from "@/components/tables/InvestorTable";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -32,15 +32,13 @@ const page = () => {
         <div className="w-full px-4 lg:w-5/6">
           <div className="px-5 text-center lg:text-left">
             <h1 className="py-2 text-2xl font-medium tracking-widest text-black">
-              Hi Expert, Welcome!
+              Hi Investor, Welcome!
             </h1>
-            <p className="">
-              You have lots of pitches lined up for evaluation!
-            </p>
+            <p className="">You have lots of entrepreneurs to connect with!</p>
           </div>
           <div className="mb-12 mt-5 flex flex-row items-center justify-between shadow-lg lg:flex-row lg:justify-around">
             <p className="my-auto px-5 py-3 text-lg font-medium tracking-wide text-black lg:text-xl">
-              Pitches for evaluation -
+              Pitches Viewed -
             </p>
           </div>
         </div>
@@ -61,7 +59,7 @@ const page = () => {
 
               <li className="py-2">
                 <Link href="" className="text-gray-700 hover:text-rgb-yellow">
-                  Reviewed
+                  Viewed
                 </Link>
               </li>
             </ul>
@@ -74,7 +72,7 @@ const page = () => {
           </div>
           <div className="border-grey-50 border-b border-t"></div>
           <div className="container mx-auto">
-            <ExpertTable data={data} />
+            <InvestorTable data={data} />
           </div>
         </div>
       </div>

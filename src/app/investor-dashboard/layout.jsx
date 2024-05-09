@@ -7,9 +7,9 @@ import React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const DashboardLayout = ({ children }) => {
+const InvestorDashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -17,7 +17,7 @@ const DashboardLayout = ({ children }) => {
   const signout = () => {
     sessionStorage.removeItem("token");
     router.push("/");
-  }
+  };
 
   return (
     <section>
@@ -43,23 +43,11 @@ const DashboardLayout = ({ children }) => {
             {/*Links Div*/}
             <ul className="flex gap-10 font-light text-white">
               <li>
-                <Link href="/dashboard" className="tracking-wider hover:text-rgb-yellow">
-                  Dashboard
-                </Link>
-              </li>
-
-              <li>
                 <Link
-                  href="/dashboard/subscription-plans"
+                  href="/dashboard"
                   className="tracking-wider hover:text-rgb-yellow"
                 >
-                  Pricing
-                </Link>
-              </li>
-
-              <li>
-                <Link href="/dashboard/learning-section" className="tracking-wider hover:text-rgb-yellow">
-                  Help
+                  Dashboard
                 </Link>
               </li>
             </ul>
@@ -95,7 +83,7 @@ const DashboardLayout = ({ children }) => {
                   {/* Modal header with cross button */}
                   <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-center text-2xl font-semibold">
-                      Profile Settings
+                      Profile
                     </h2>
                     <button onClick={toggleModal} className="text-black">
                       <svg
@@ -115,32 +103,8 @@ const DashboardLayout = ({ children }) => {
                     </button>
                   </div>
                   {/* Modal content */}
-                  <div className="mb-4">
-                    <input
-                      className="w-full border-b bg-transparent py-4 font-normal text-black focus:outline-none"
-                      type="text"
-                      placeholder="Name"
-                    />
-                    <button className="mx-auto mt-3 flex rounded-3xl bg-rgb-yellow px-4 py-2 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400">
-                      Update Name
-                    </button>
-                  </div>
-                  <div>
-                    <div className="mb-4 flex">
-                      <label className="py-2 font-semibold text-black">
-                        Password
-                      </label>
-                      <p className="my-auto ml-3 text-sm">
-                        (Click on the button below to reset password)
-                      </p>
-                    </div>
-                    <Link href="/auth/update-password">
-                      <button className="mx-auto mb-3 mt-3 flex rounded-3xl bg-rgb-yellow px-4 py-2 text-sm text-rgb-green transition duration-300 ease-in-out hover:bg-orange-400">
-                        Update Password
-                      </button>
-                    </Link>
-                  </div>
-                  <div className="flex justify-end">
+
+                  <div className="flex justify-center">
                     <button
                       className="rounded-3xl bg-red-600 px-4 py-2 text-sm text-white"
                       onClick={signout}
@@ -159,4 +123,4 @@ const DashboardLayout = ({ children }) => {
   );
 };
 
-export default DashboardLayout;
+export default InvestorDashboardLayout;
