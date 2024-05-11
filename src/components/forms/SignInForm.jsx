@@ -22,14 +22,38 @@ const SignInForm = () => {
     };
     try {
       const res = await axiosInstance.post("/auth/login", formData);
+      console.log(res.data.token);
       if (res.status === 201) {
         sessionStorage.setItem("token", res.data.token);
         sessionStorage.setItem("email", email)
-        router.push("/dashboard");
+        console.log("login success");
+        const response = await axiosInstance.post("/user/type", {} , {headers: {
+          "Authorization" : `Bearer ${res.data.token}`
+        }})
+        console.log(response.data);
+        if (response.data.type == "user" && response.data.verified){
+          router.push("/dashboard");
+        }
+        else if (response.data.type == "user" && !response.data.verified){
+          alert("You are not Verified!")
+          router.push("/auth/otp-code-signup")
+        }
+        else if (response.data.type == "expert" && response.data.verified){
+          router.push("/expert-dashboard");
+        }
+        else if (response.data.type == "expert" && !response.data.verified){
+          alert("You are not Verified! Wait for admin to verify you.")
+        }
+        else if (response.data.type == "investor" && response.data.verified){
+          router.push("/investor-dashboard");
+        }
+        else if (response.data.type == "investor" && !response.data.verified){
+          alert("You are not Verified! Wait for admin to verify you.")
+        }
       }
     } catch (err) {
       alert("Invalid Email or Password!")
-      console.log("Invalid Email or Password");
+      console.log("Invalid Email or Password" + err);
     }
   };
 
