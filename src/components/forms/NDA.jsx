@@ -1,6 +1,56 @@
-import React from "react";
+"use client"
+import axiosInstance from "@/app/api/axios";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const NDA = () => {
+  const router = useRouter();
+  const [pitchId, setPitchId] = useState("")
+  const [token, setToken] = useState("")
+  useEffect(()=> {
+    const getPitchId = sessionStorage.getItem('pitchId');
+    setPitchId(getPitchId)
+    const getToken = sessionStorage.getItem('token');
+    console.log(getToken);
+    setToken(getToken)
+  }, [])
+
+  useEffect(()=> {
+    console.log(token);
+  }, [token])
+
+  const openPdf = (filename) => {
+    const url = `http://localhost:8080/pitch/pdf/${filename}`;
+    window.open(url, "_blank");
+  };
+
+  const handleAccept = async () => {
+    if (token){
+      const res = await axiosInstance.put(`/user/expert/sign/nda`, {
+        id: pitchId
+      }, {headers: {
+        'Authorization' : `Bearer ${token}`
+      }})
+      console.log(res);
+      const response = await axiosInstance.get(`/user/one/pitch/${pitchId}`)
+      if (response){
+        openPdf(response.data.pdf)
+        const userType = await axiosInstance.post('/user/type', {} , {headers: {
+          "Authorization" : `Bearer ${token}`
+        }})
+        console.log(userType);
+        if (userType.data.type == "expert"){
+          router.push("/expert-dashboard")
+        }
+        else if (userType.data.type == "expert"){
+          router.push("/investor-dashboard")
+        }
+      }
+      else {
+        alert("An Error Occured!")
+      }
+    }
+  }
   return (
     <div className="mx-auto max-w-7xl rounded-3xl bg-gray-100 px-8 py-8">
       <h1 className="mb-4 text-center text-3xl font-bold">
@@ -103,7 +153,9 @@ const NDA = () => {
         </p>
       </div>
 
-      <button className="mx-auto flex rounded-md bg-rgb-green px-4 py-2 text-white hover:bg-green-600">
+      <button className="mx-auto flex rounded-md bg-rgb-green px-4 py-2 text-white hover:bg-green-600"
+      onClick={()=>handleAccept()}
+      >
         Accept Terms and Conditions
       </button>
     </div>

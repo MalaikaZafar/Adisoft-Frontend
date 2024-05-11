@@ -1,29 +1,102 @@
-import React, { useState } from "react";
+'use client'
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import axiosInstance from "@/app/api/axios";
 
 const ExpertTable = ({ data }) => {
   const [showReviewPopup, setShowReviewPopup] = useState(false);
   const [showNDAPopup, setShowNDAPopup] = useState(false);
   const [selectedPitch, setSelectedPitch] = useState(null);
   const [reviewText, setReviewText] = useState("");
+  const [pitchId, setPitchId] = useState("");
+  const [token, setToken] = useState("");
+  const [selectedRating, setSelectedRating] = useState(0);
 
-  const togglePopup = (pitch, isReview) => {
+  useEffect(()=> {
+    const getToken = sessionStorage.getItem("token")
+    setToken(getToken)
+  })
+
+  useEffect(()=> {
+    console.log(token);
+  }, [token])
+
+  const openPdf = (filename) => {
+    const url = `http://localhost:8080/pitch/pdf/${filename}`;
+    window.open(url, "_blank");
+  };
+
+  const togglePopup = (pitch, isReview, pitchid) => {
     if (isReview) {
       setSelectedPitch(pitch);
       setShowReviewPopup(!showReviewPopup);
+      setPitchId(pitchid)
     } else {
       setShowNDAPopup(!showNDAPopup);
     }
+  };  
+
+  console.log(data);
+
+
+  const handleReview = async (item) => {
+    const data = {
+      id : item._id
+    }
+    const res = await axiosInstance.post('/user/expert/signed-the-nda', data, {
+      headers: {
+        'Authorization' : `Bearer ${token}`
+      }
+    })
+    if (res.data){
+      togglePopup(item.title, true, item._id)
+    }
+    else{
+      alert("NDA not signed")
+    }
+    setPitchId(item._id)
+  }
+
+  const handleReviewSubmit = async (item) => {
+      const res = await axiosInstance.put(`/user/expert/pitch/review/${pitchId}`, {
+        rating: selectedRating,
+        remarks: reviewText
+      }, {headers: {
+        'Authorization' : `Bearer ${token}`
+      }})
+
+      if (res.data == "success"){
+        alert("Review added Successfully")
+        // Clear review text
+        setReviewText("");
+        // Close popup
+        setShowReviewPopup(false);
+      }
+      else if (res.data == "You have already reviewed"){ 
+        alert("You have already reviewed")
+        setReviewText("");
+        setShowReviewPopup(false);
+      }
   };
 
-  const handleReviewSubmit = () => {
-    // Logic to submit review
-    console.log("Review submitted:", reviewText);
-    // Clear review text
-    setReviewText("");
-    // Close popup
-    setShowReviewPopup(false);
-  };
+  const handlePitch = async (item) => {
+    const data = {
+      id : item._id
+    }
+    const res = await axiosInstance.post('/user/expert/signed-the-nda', data, {
+      headers: {
+        'Authorization' : `Bearer ${token}`
+      }
+    })
+    setPitchId(item._id)
+    console.log(res.data);
+    if (!res.data){
+      togglePopup(item.title, false, item._id)
+    }
+    else {
+      openPdf(item.pdf)
+    }
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -71,7 +144,7 @@ const ExpertTable = ({ data }) => {
               </td>
               <td className="whitespace-nowrap text-center">
                 <a
-                  onClick={() => togglePopup(item.title, false)}
+                  onClick={() => {handlePitch(item)}}
                   className="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-900"
                 >
                   {item.pdf}
@@ -80,7 +153,7 @@ const ExpertTable = ({ data }) => {
               <td className="whitespace-nowrap text-center">
                 <button
                   className="mb-3 mt-4 rounded-3xl bg-rgb-green px-3 py-2 text-sm text-white"
-                  onClick={() => togglePopup(item.title, true)}
+                  onClick={() => {handleReview(item)}}
                 >
                   Add Review
                 </button>
@@ -91,33 +164,47 @@ const ExpertTable = ({ data }) => {
       </table>
 
       {showReviewPopup && (
-        <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
-          <div className="w-2/4 rounded-lg bg-white p-10">
-            <h2 className="mb-4 text-lg font-bold">Add Review</h2>
-            <h2 className="mb-4 mt-2 text-lg font-bold">{selectedPitch}</h2>
-            <textarea
-              className="mb-4 h-32 w-full resize-none rounded-md border border-gray-300 p-2"
-              placeholder="Write your review..."
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end">
-              <button
-                className="mr-2 rounded-lg bg-rgb-yellow px-4 py-2 text-white"
-                onClick={() => setShowReviewPopup(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="rounded-lg bg-rgb-green px-4 py-2 text-white"
-                onClick={handleReviewSubmit}
-              >
-                Submit
-              </button>
-            </div>
-          </div>
+  <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
+    <div className="w-2/4 rounded-lg bg-white p-10 flex flex-col">
+      <h2 className="mb-4 text-lg font-bold">Add Review</h2>
+      <h2 className="mb-4 mt-2 text-lg font-bold">{selectedPitch}</h2>
+      <textarea
+        className="mb-4 h-32 w-full resize-none rounded-md border border-gray-300 p-2"
+        placeholder="Write your review..."
+        value={reviewText}
+        onChange={(e) => setReviewText(e.target.value)}
+      ></textarea>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <label htmlFor="rating">Select Rating:</label>
+          <select id="rating" value={selectedRating} onChange={(e)=> setSelectedRating(Number(e.target.value))}>
+            <option value="">Select Rating</option>
+            {[...Array(10).keys()].map((index) => (
+              <option key={index + 1} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
+        <div className="flex">
+          <button
+            className="mr-2 rounded-lg bg-rgb-yellow px-4 py-2 text-white"
+            onClick={() => setShowReviewPopup(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="rounded-lg bg-rgb-green px-4 py-2 text-white"
+            onClick={handleReviewSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {showNDAPopup && (
         <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
@@ -135,10 +222,13 @@ const ExpertTable = ({ data }) => {
               >
                 Go back
               </button>
-              <Link href="/investor-dashboard/agreement">
+              <Link href={`/expert-dashboard/agreement?data=${encodeURIComponent(pitchId)}`}>
                 <button
                   className="rounded-lg bg-rgb-green px-4 py-2 text-white"
-                  onClick={() => setShowNDAPopup(false)}
+                  onClick={() => {
+                    sessionStorage.setItem("pitchId", pitchId)
+                    setShowNDAPopup(false)}
+                  }
                 >
                   Sign Non-Disclosure Agreement
                 </button>
