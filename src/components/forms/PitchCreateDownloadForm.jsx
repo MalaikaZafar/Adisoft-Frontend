@@ -38,7 +38,7 @@ const PitchCreateDownloadForm = () => {
         saveAs(pdfBlob, "pitch.pdf");
       })
       .finally(()=> {
-        alert("PDF Downloaded Successfully!")
+        alert("PDF Downloading!")
         router.push("/dashboard")
       })
     };
