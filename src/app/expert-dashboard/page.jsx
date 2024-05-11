@@ -2,15 +2,27 @@
 import ExpertTable from "@/components/tables/ExpertTable";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-
-var data = [
-  { id: 1, name: "Example 1", url: "https://example.com/1" },
-  { id: 2, name: "Example 2", url: "https://example.com/2" },
-  { id: 3, name: "Example 3", url: "https://example.com/3" },
-];
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../api/axios";
 
 const page = () => {
+  const [data, setData] = useState([
+    {_id: 1, name: "Adisoft", url: "https://example.com"}
+  ])
+
+  const getReviewablePitches = async () => {
+    try {
+      const res = await axiosInstance.get("/user/all/reviewable/pitches");
+      setData(res.data);
+    } catch (error) {
+      console.error("Error fetching reviewable pitches:", error);
+    }
+  };
+
+  useEffect(()=> {
+    getReviewablePitches()
+  }, [])
+  
   return (
     <>
       <div className="mt-5 flex h-52 flex-col lg:flex-row ">
@@ -74,7 +86,7 @@ const page = () => {
           </div>
           <div className="border-grey-50 border-b border-t"></div>
           <div className="container mx-auto">
-            <ExpertTable data={data} />
+            {<ExpertTable data={data} />}
           </div>
         </div>
       </div>

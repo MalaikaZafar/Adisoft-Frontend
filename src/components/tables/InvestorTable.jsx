@@ -1,14 +1,49 @@
+import axiosInstance from "@/app/api/axios";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const InvestorTable = ({ data }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPitch, setSelectedPitch] = useState(null);
+  const [token, setToken] = useState("");
+  const [pitchId, setPitchId] = useState("");
+
+  useEffect(()=> {
+    const getToken = sessionStorage.getItem("token")
+    setToken(getToken)
+  })
+
+  useEffect(()=> {
+    console.log(token);
+  }, [token])
 
   const togglePopup = (pitch) => {
     setSelectedPitch(pitch);
     setShowPopup(!showPopup);
   };
+
+  const openPdf = (filename) => {
+    const url = `http://localhost:8080/pitch/pdf/${filename}`;
+    window.open(url, "_blank");
+  };
+
+  const handleViewPitch = async (item) => {
+    const data = {
+      id : item._id
+    }
+    const res = await axiosInstance.post('/user/expert/signed-the-nda', data, {
+      headers: {
+        'Authorization' : `Bearer ${token}`
+      }
+    })
+    if (!res.data){
+      togglePopup(true)
+      setPitchId(item._id)
+    }
+    else{
+      openPdf(item.pdf)
+    }
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -57,8 +92,8 @@ const InvestorTable = ({ data }) => {
               <td className="whitespace-nowrap text-center">
                 <a
                   // onClick={() => openPdf(item.pdf)}
-                  onClick={() => togglePopup(item.title)}
                   className="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                  onClick={()=> {handleViewPitch(item)}}
                 >
                   {item.pdf}
                 </a>
@@ -66,7 +101,7 @@ const InvestorTable = ({ data }) => {
               <td className="whitespace-nowrap text-center">
                 <button
                   className="mb-3 mt-4 rounded-3xl bg-rgb-green px-3 py-2 text-sm text-white"
-                  onClick={() => togglePopup(item.title)}
+                  onClick={() => handleViewPitch(item)}
                 >
                   View Pitch
                 </button>
@@ -95,7 +130,10 @@ const InvestorTable = ({ data }) => {
               <Link href="/investor-dashboard/agreement">
                 <button
                   className="rounded-lg bg-rgb-green px-4 py-2 text-white"
-                  onClick={togglePopup}
+                  onClick={()=> {
+                    sessionStorage.setItem("pitchId", pitchId)
+                    setShowPopup(false)
+                  }}
                 >
                   Sign Non-Disclosure Agreement
                 </button>

@@ -1,12 +1,12 @@
 "use client"
 
 import axiosInstancePython from "@/app/api/axiosPython";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
 
 const PredictSuccessForm = () => {
-
   const [fundingRound, setFundingRound] = useState(0)
   const [firstFundingYear, setFirstFundingYear] = useState(0)
   const [lastFundingYear, setLastFundingYear] = useState(0);
@@ -25,6 +25,7 @@ const PredictSuccessForm = () => {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
+  const router = useRouter()
 
   const handleSubmit = async () => {
 
@@ -86,7 +87,13 @@ const PredictSuccessForm = () => {
   try {
     const res = await axiosInstancePython.post('success-prediction', data)
     .then((response)=> {
-      setSuccess((Number(response.data.message)*100).toFixed(2));
+      const value = (Number(response.data.message)*100).toFixed(2)
+      if (value < 0){
+        setSuccess(0)
+      }
+      else{
+        setSuccess(value);
+      }
       setShowModal(true)
     }) 
   } catch (error) {
