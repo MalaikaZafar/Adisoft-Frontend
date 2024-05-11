@@ -2,15 +2,35 @@
 import InvestorTable from "@/components/tables/InvestorTable";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-
-var data = [
-  { id: 1, name: "Example 1", url: "https://example.com/1" },
-  { id: 2, name: "Example 2", url: "https://example.com/2" },
-  { id: 3, name: "Example 3", url: "https://example.com/3" },
-];
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../api/axios";
 
 const page = () => {
+  const [data, setData] = useState([
+    {_id: 1, title: "No pdfs available", pdf: "no pdfs available"}
+  ])
+
+  const getReviewablePitches = async () => {
+    try {
+      const res = await axiosInstance.get("/user/all/reviewed/pitches");
+      console.log(res)
+      if (res) {
+        const filteredPDFs = res.data.filter(pdf => {
+          const avgRating =
+            pdf.reviews.reduce((acc, review) => acc + review.rating, 0) / pdf.reviews.length;
+          return (avgRating > 7);
+        });
+        console.log(filteredPDFs);
+        setData(filteredPDFs)
+      }
+    } catch (error) {
+      console.error("Error fetching reviewable pitches:", error);
+    }
+  };
+
+  useEffect(()=> {
+    getReviewablePitches()
+  }, [])
   return (
     <>
       <div className="mt-5 flex h-52 flex-col lg:flex-row ">

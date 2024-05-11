@@ -8,13 +8,11 @@ import Table from "@/components/tables/Table";
 import axiosInstance from "../api/axios";
 import { useRouter } from "next/navigation";
 
-var data = [
-  { id: 1, name: "Example 1", url: "https://example.com/1" },
-  { id: 2, name: "Example 2", url: "https://example.com/2" },
-  { id: 3, name: "Example 3", url: "https://example.com/3" },
-];
-
 const Page = () => {
+  const [data, setData] = useState([
+    {_id: 1, title: "No pdfs available", pdf: "no pdfs available"}
+  ])
+  const [status, setStatus] = useState("active")
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [file, setFile] = useState("");
@@ -25,13 +23,40 @@ const Page = () => {
 
   const router = useRouter();
 
+  const getPitches = async () => {
+    console.log(token);
+    if (token){
+      const res = await axiosInstance.post(
+        "user/type",
+        {},
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        },
+      );
+      console.log(res);
+      if (res.status === 201) {
+        const emailData = {
+          email: res.data.email,
+        };
+        const resp = await axiosInstance.post("pitch/user/files", emailData);
+        console.log(resp);
+        setData(resp.data);
+      }
+    }
+  };
+
   useEffect(() => {
     const storedToken = sessionStorage.getItem("token");
     setToken(storedToken);
     const storedEmail = sessionStorage.getItem("email");
     setEmail(storedEmail);
+  }, []);
+
+  useEffect(()=>{
     getPitches();
-  });
+  }, [token])
 
   useEffect(() => {
     fetch("http://localhost:8080/pitch/files")
@@ -40,26 +65,6 @@ const Page = () => {
       .catch((error) => console.error("Error fetching files:", error));
   }, [lastUpload]);
 
-  const getPitches = async () => {
-    const res = await axiosInstance.post(
-      "user/email",
-      {},
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      },
-    );
-    console.log(res);
-    if (res.status === 201) {
-      const emailData = {
-        email: res.data,
-      };
-      const resp = await axiosInstance.post("pitch/user/files", emailData);
-      console.log(resp);
-      data = resp.data;
-    }
-  };
 
   const submitImage = async (e) => {
     e.preventDefault();
@@ -92,18 +97,21 @@ const Page = () => {
     console.log(result);
     if (result.data.title === title) {
       alert("Uploaded Successfully!!!");
+      setShowModal(false)
+      getPitches()
     }
   };
 
   const navigateToPitchCreation = async () => {
     console.log(token);
     if (token !== "") {
+      console.log(token);
       const res = await axiosInstance.post(
         "/user/email",
         {},
         {
           headers: {
-            Authorization: "Bearer " + token,
+            "Authorization": `Bearer ${token}`,
           },
         },
       );
@@ -158,6 +166,21 @@ const Page = () => {
       }
     }
   };
+
+  const getApprovedPitches = async () => {
+    try {
+        const filteredPDFs = data.filter(pdf => {
+          const avgRating =
+            pdf.reviews.reduce((acc, review) => acc + review.rating, 0) / pdf.reviews.length;
+          return (avgRating > 7);
+        });
+        console.log(filteredPDFs);
+        setData(filteredPDFs)
+        setStatus("approved")
+    } catch (error) {
+      console.error("Error fetching reviewable pitches:", error);
+    }
+  }
 
   return (
     <>
@@ -217,7 +240,7 @@ const Page = () => {
               &#8203;
             </span>
             <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-              <form className="formStyle" onSubmit={submitImage}>
+              <form className="formStyle" onSubmit={(e)=>submitImage(e)}>
                 <h4 className="mx-auto mb-5 mt-5 px-4 text-2xl font-medium text-black">
                   Upload Pitch
                 </h4>
@@ -307,7 +330,9 @@ const Page = () => {
           <div className="bg-slate-200">
             <ul className="mt-5 flex flex-wrap justify-around text-sm font-light md:gap-8">
               <li className="bg-rgb-green px-2 py-2 text-white">
-                <Link href="" className="hover:text-rgb-yellow">
+                <Link href="" className="hover:text-rgb-yellow"
+                onClick={()=>setStatus("active")}
+                >
                   Active
                 </Link>
               </li>
@@ -319,7 +344,9 @@ const Page = () => {
               </li>
 
               <li className="py-2">
-                <Link href="" className="text-gray-700 hover:text-rgb-yellow">
+                <Link href="" className="text-gray-700 hover:text-rgb-yellow"
+                onClick={()=> getApprovedPitches()}
+                >
                   Approved
                 </Link>
               </li>
@@ -352,7 +379,7 @@ const Page = () => {
           </div>
           <div className="border-grey-50 border-b border-t"></div>
           <div className="container mx-auto">
-            <Table data={data} />
+            <Table data={data} status={status}/>
           </div>
         </div>
       </div>
